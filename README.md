@@ -1,123 +1,170 @@
-# MedGuard AI — Backend
+# 🏥 MedGuard AI
 
-AI-powered healthcare risk detection system built with FastAPI + OpenAI.
+> AI-powered clinical risk detection system for preventing medical errors in real time.
 
-## Setup
+---
+
+## 🚀 Live Concept
+
+MedGuard AI analyzes patient cases and detects:
+
+* ❗ Diagnosis mismatches
+* 💊 Drug interaction risks
+* 🧪 Critical lab abnormalities
+* ⚠️ Overall clinical risk (LOW → CRITICAL)
+
+---
+
+## 🖥️ UI Preview
+
+### 📊 Dashboard
+
+![Dashboard](assets/dashboard.png)
+
+### ⚠️ Risk Analysis
+
+![Analysis](assets/analysis.png)
+
+### 🧠 Explainability Panel
+
+![Explainability](assets/explainability.png)
+
+---
+
+## 🧠 How It Works
+
+```
+User Input
+   ↓
+FastAPI Backend (Async)
+   ↓
+AI Agents (Diagnosis + Drug + Lab)
+   ↓
+Rule Engine (Deterministic validation)
+   ↓
+Risk Scoring Engine
+   ↓
+Frontend Dashboard (Next.js)
+```
+
+---
+
+## ⚙️ Tech Stack
+
+### Backend
+
+* FastAPI
+* Python
+* AsyncIO
+
+### Frontend
+
+* Next.js
+* React
+* Tailwind CSS
+
+### AI Layer
+
+* Groq LLM API
+* Prompt-based medical reasoning
+
+### Core Design
+
+* Hybrid AI + Rule Engine
+* Explainable AI system
+
+---
+
+## 📊 Example Use Case
+
+**Input:**
+
+* Symptoms: Chest pain, shortness of breath
+* Diagnosis: Gastric reflux
+
+**Output:**
+
+* 🚨 Diagnosis mismatch detected
+* ⚠️ Critical lab abnormalities
+* 🔴 Risk Level: HIGH / CRITICAL
+
+---
+
+## 🧩 Key Features
+
+* Real-time clinical risk detection
+* Explainable AI decisions
+* Modular agent-based architecture
+* Deterministic lab rule engine
+* Clean medical dashboard UI
+
+---
+
+## ⚠️ Problem It Solves
+
+Medical errors occur due to:
+
+* Misdiagnosis
+* Overlooked lab values
+* Drug interaction risks
+
+MedGuard AI acts as a **second layer of safety for clinicians**.
+
+---
+
+## 🛠️ Setup
+
+### Backend
 
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
+venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env              # then add your OPENAI_API_KEY
-```
-
-## Run
-
-```bash
 uvicorn main:app --reload
 ```
 
-API docs: http://localhost:8000/docs
+### Frontend
 
----
-
-## Endpoint
-
-### `POST /api/v1/analyze-case`
-
-**Request body:**
-```json
-{
-  "age": 58,
-  "gender": "male",
-  "symptoms": ["chest pain", "shortness of breath", "fatigue"],
-  "diagnosis": "anxiety disorder",
-  "medications": ["warfarin", "aspirin", "ibuprofen"],
-  "lab_results": {
-    "hemoglobin": 10.2,
-    "WBC": 13.5,
-    "platelets": 95,
-    "blood_sugar": 145,
-    "cholesterol": 260
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "risk_level": "CRITICAL",
-  "alerts": [
-    {
-      "type": "diagnosis_mismatch",
-      "message": "Symptoms of chest pain and shortness of breath are inconsistent with anxiety disorder and may indicate acute coronary syndrome.",
-      "recommended_action": "Immediate cardiology consult and ECG."
-    },
-    {
-      "type": "drug_interaction",
-      "message": "Warfarin + Aspirin + Ibuprofen: triple anticoagulant/NSAID combination increases bleeding risk significantly.",
-      "recommended_action": "Discontinue ibuprofen; review anticoagulation regimen with pharmacist."
-    },
-    {
-      "type": "lab_abnormality",
-      "message": "Hemoglobin (Low): May indicate anaemia. | Platelets (Critical Low): Thrombocytopenia risk. | Blood Sugar (High): Pre-diabetic range.",
-      "recommended_action": "Urgent haematology review; monitor blood glucose."
-    }
-  ]
-}
-```
-
-**cURL example:**
 ```bash
-curl -X POST http://localhost:8000/api/v1/analyze-case \
-  -H "Content-Type: application/json" \
-  -d '{
-    "age": 58,
-    "gender": "male",
-    "symptoms": ["chest pain", "shortness of breath", "fatigue"],
-    "diagnosis": "anxiety disorder",
-    "medications": ["warfarin", "aspirin", "ibuprofen"],
-    "lab_results": {
-      "hemoglobin": 10.2,
-      "WBC": 13.5,
-      "platelets": 95,
-      "blood_sugar": 145,
-      "cholesterol": 260
-    }
-  }'
+cd medguard-ui
+npm install
+npm run dev
 ```
 
 ---
 
-## Architecture
+## 🔐 Environment Variables
+
+Create:
 
 ```
-backend/
-├── main.py                        # FastAPI app, lifespan, middleware
-├── requirements.txt
-├── .env.example
-└── app/
-    ├── schemas.py                 # Pydantic request / response models
-    ├── ai/
-    │   └── agent.py               # MedGuardAgent — 3 AI check methods
-    ├── services/
-    │   └── risk_engine.py         # Weighted scoring → RiskLevel + Alerts
-    └── routes/
-        └── analyze.py             # POST /analyze-case handler
+backend/.env
 ```
 
-## Risk Scoring
+```env
+GROQ_API_KEY=your_api_key_here
+```
 
-| Domain              | Weight | Rationale                             |
-|---------------------|--------|---------------------------------------|
-| Diagnosis mismatch  | 40 pts | Wrong diagnosis cascades downstream   |
-| Drug interaction    | 35 pts | Severe interactions are acutely fatal |
-| Lab abnormalities   | 25 pts | Critical but less immediately decisive|
+---
 
-| Final Score | Risk Level |
-|-------------|------------|
-| 0–24        | LOW        |
-| 25–49       | MODERATE   |
-| 50–74       | HIGH       |
-| 75–100      | CRITICAL   |
+## 🚀 Future Scope
+
+* Full rule-based diagnosis engine
+* Hospital EMR integration
+* Real-time patient monitoring
+* Medical knowledge graph
+* Explainability scoring
+
+---
+
+## ⚠️ Disclaimer
+
+Not intended for real clinical use. Educational & research purpose only.
+
+---
+
+## 👨‍💻 Author
+
+Yogesh
+BTech CSE
