@@ -59,16 +59,16 @@ export default function MedGuardDashboard() {
     const payload = {
       age: Number(formData.age),
       gender: formData.gender,
+      primary_diagnosis: formData.diagnosis,
       symptoms: formData.symptoms
         ? formData.symptoms.split(",").map((s) => s.trim())
         : [],
-      diagnosis: formData.diagnosis,
       medications: formData.medications
         ? formData.medications.split(",").map((m) => m.trim())
         : [],
       lab_results: {
         hemoglobin: Number(formData.labs.hemoglobin) || 0,
-        WBC: Number(formData.labs.wbc) || 0,
+        wbc: Number(formData.labs.wbc) || 0,
         platelets: Number(formData.labs.platelets) || 0,
         blood_sugar: Number(formData.labs.blood_sugar) || 0,
         cholesterol: Number(formData.labs.cholesterol) || 0,
@@ -76,7 +76,7 @@ export default function MedGuardDashboard() {
     };
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/v1/analyze-case", {
+      const res = await fetch("https://medguard-backend-30fv.onrender.com/api/v1/analyze-case", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
