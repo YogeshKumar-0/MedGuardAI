@@ -59,13 +59,14 @@ export default function MedGuardDashboard() {
     const payload = {
       age: Number(formData.age),
       gender: formData.gender,
-      primary_diagnosis: formData.diagnosis,
+      diagnosis: formData.diagnosis,
       symptoms: formData.symptoms
         ? formData.symptoms.split(",").map((s) => s.trim())
         : [],
       medications: formData.medications
         ? formData.medications.split(",").map((m) => m.trim())
         : [],
+
       lab_results: {
         hemoglobin: Number(formData.labs.hemoglobin) || 0,
         wbc: Number(formData.labs.wbc) || 0,
