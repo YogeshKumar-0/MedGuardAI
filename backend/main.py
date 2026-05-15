@@ -64,10 +64,14 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["POST", "GET"],
+    allow_origins=[
+        "https://medguardlive.vercel.app",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Routes
 app.include_router(analyze_router, prefix="/api/v1", tags=["Analysis"])
