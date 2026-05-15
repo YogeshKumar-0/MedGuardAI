@@ -69,7 +69,7 @@ export default function MedGuardDashboard() {
 
       lab_results: {
         hemoglobin: Number(formData.labs.hemoglobin) || 0,
-        wbc: Number(formData.labs.wbc) || 0,
+        WBC: Number(formData.labs.wbc) || 0,
         platelets: Number(formData.labs.platelets) || 0,
         blood_sugar: Number(formData.labs.blood_sugar) || 0,
         cholesterol: Number(formData.labs.cholesterol) || 0,
