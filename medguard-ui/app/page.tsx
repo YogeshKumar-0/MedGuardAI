@@ -373,7 +373,11 @@ export default function MedGuardDashboard() {
                   <h4 className="font-semibold text-slate-700 mb-1">Why this risk?</h4>
                   <ul className="text-sm text-slate-600 list-disc ml-5 space-y-1">
                     {result.alerts.map((a, i) => (
-                      <li key={i}>{a.type.replace("_", " ")}</li>
+                      <li key={i}>
+                        {a.type
+                          .replace(/_/g, " ")
+                          .replace(/\b\w/g, (c) => c.toUpperCase())}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -408,10 +412,21 @@ export default function MedGuardDashboard() {
                         <div className="w-full">
                           <div className="flex items-center gap-2">
                             <h4 className="text-lg font-bold text-slate-900">
-                              {alert.type}
+                              {alert.type
+                                .replace(/_/g, " ")
+                                .replace(/\b\w/g, (c) => c.toUpperCase())}
                             </h4>
-                            <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-semibold">
-                              HIGH
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full font-semibold ${result.risk_level === "CRITICAL"
+                                  ? "bg-rose-100 text-rose-700"
+                                  : result.risk_level === "HIGH"
+                                    ? "bg-orange-100 text-orange-700"
+                                    : result.risk_level === "MODERATE"
+                                      ? "bg-amber-100 text-amber-700"
+                                      : "bg-emerald-100 text-emerald-700"
+                                }`}
+                            >
+                              {result.risk_level}
                             </span>
                           </div>
                           <p className="mt-1.5 text-base text-slate-600 leading-relaxed">
@@ -427,9 +442,28 @@ export default function MedGuardDashboard() {
                                 Recommended Action
                               </span>
                             </div>
-                            <p className="text-sm font-semibold text-slate-800">
-                              {alert.recommended_action}
-                            </p>
+                            <div className="text-sm text-slate-700 leading-relaxed space-y-2">
+                              {typeof alert.recommended_action === "string" ? (
+                                <p>{alert.recommended_action}</p>
+                              ) : (
+                                Object.entries(alert.recommended_action as Record<string, string>).map(
+                                  ([key, value]) => (
+                                    <div
+                                      key={key}
+                                      className="rounded-lg bg-white border border-slate-200 p-3"
+                                    >
+                                      <div className="font-semibold text-slate-900 mb-1">
+                                        {key.replace("_", " ")}
+                                      </div>
+
+                                      <div className="text-slate-600 text-sm">
+                                        {value}
+                                      </div>
+                                    </div>
+                                  )
+                                )
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
