@@ -6,7 +6,7 @@ import React, { useState } from "react";
 interface Alert {
   type: string;
   message: string;
-  recommended_action: string;
+  recommended_action: any;
 }
 
 interface ApiResponse {
@@ -323,16 +323,20 @@ export default function MedGuardDashboard() {
               <h2 className="text-sm font-bold uppercase tracking-widest opacity-80 mb-2">
                 Overall Risk Assessment
               </h2>
-              <div className="text-5xl md:text-6xl font-black tracking-tight drop-shadow-sm">
+              <div className="text-6xl md:text-7xl font-black tracking-tight drop-shadow-sm">
                 {result.risk_level}
               </div>
+              <p className="mt-4 text-sm opacity-80 font-medium max-w-xl mx-auto leading-relaxed">
+                AI-generated clinical assessment based on provided biomarkers,
+                symptoms, medications, and diagnostic indicators.
+              </p>
             </div>
 
-            {/* 🧠 Explainability Panel */}
+            {/*Explainability Panel */}
             {result && (
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
                 <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                  🧠 Explainability
+                  Clinical Explainability
                 </h3>
 
                 <div className="grid md:grid-cols-3 gap-4">
@@ -390,7 +394,7 @@ export default function MedGuardDashboard() {
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-px bg-slate-200 flex-1"></div>
                   <h3 className="text-lg font-bold text-slate-400 uppercase tracking-widest">
-                    Clinical Insights ({result.alerts.length})
+                    Clinical Risk Insights
                   </h3>
                   <div className="h-px bg-slate-200 flex-1"></div>
                 </div>
@@ -399,7 +403,7 @@ export default function MedGuardDashboard() {
                   {result.alerts.map((alert, index) => (
                     <div
                       key={index}
-                      className="group bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-xl hover:border-indigo-100 transition-all duration-300"
+                      className="group bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 p-6 hover:shadow-xl hover:border-indigo-100 transition-all duration-300"
                     >
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 mt-1">
@@ -418,20 +422,28 @@ export default function MedGuardDashboard() {
                             </h4>
                             <span
                               className={`text-xs px-2 py-1 rounded-full font-semibold ${result.risk_level === "CRITICAL"
-                                  ? "bg-rose-100 text-rose-700"
-                                  : result.risk_level === "HIGH"
-                                    ? "bg-orange-100 text-orange-700"
-                                    : result.risk_level === "MODERATE"
-                                      ? "bg-amber-100 text-amber-700"
-                                      : "bg-emerald-100 text-emerald-700"
+                                ? "bg-rose-100 text-rose-700"
+                                : result.risk_level === "HIGH"
+                                  ? "bg-orange-100 text-orange-700"
+                                  : result.risk_level === "MODERATE"
+                                    ? "bg-amber-100 text-amber-700"
+                                    : "bg-emerald-100 text-emerald-700"
                                 }`}
                             >
                               {result.risk_level}
                             </span>
                           </div>
-                          <p className="mt-1.5 text-base text-slate-600 leading-relaxed">
-                            {alert.message}
-                          </p>
+                          <div className="mt-3 space-y-2">
+                            {alert.message.split("|").map((part, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-start gap-2 text-slate-700"
+                              >
+                                <span className="mt-1 text-indigo-500">•</span>
+                                <span>{part.trim()}</span>
+                              </div>
+                            ))}
+                          </div>
 
                           <div className="mt-5 bg-slate-50/80 rounded-xl p-4 border border-slate-100/50">
                             <div className="flex items-center gap-2 mb-1.5">
@@ -442,22 +454,52 @@ export default function MedGuardDashboard() {
                                 Recommended Action
                               </span>
                             </div>
-                            <div className="text-sm text-slate-700 leading-relaxed space-y-2">
+                            <div className="space-y-3">
                               {typeof alert.recommended_action === "string" ? (
-                                <p>{alert.recommended_action}</p>
+                                <p className="text-sm text-slate-700">
+                                  {alert.recommended_action}
+                                </p>
                               ) : (
-                                Object.entries(alert.recommended_action as Record<string, string>).map(
-                                  ([key, value]) => (
+                                Object.entries(alert.recommended_action as Record<string, any>).map(
+                                  ([section, items]) => (
                                     <div
-                                      key={key}
-                                      className="rounded-lg bg-white border border-slate-200 p-3"
+                                      key={section}
+                                      className="rounded-xl border border-slate-200 bg-white p-4"
                                     >
-                                      <div className="font-semibold text-slate-900 mb-1">
-                                        {key.replace("_", " ")}
-                                      </div>
+                                      <h4 className="font-semibold text-slate-900 mb-3 capitalize">
+                                        {section.replace(/_/g, " ")}
+                                      </h4>
 
-                                      <div className="text-slate-600 text-sm">
-                                        {value}
+                                      <div className="space-y-3">
+                                        {Array.isArray(items) ? (
+                                          items.map((item: any, idx: number) => (
+                                            <div
+                                              key={idx}
+                                              className="rounded-lg bg-slate-50 p-3 border border-slate-100"
+                                            >
+                                              {Object.entries(item).map(([k, v]) => (
+                                                <div
+                                                  key={k}
+                                                  className="grid grid-cols-[140px_1fr] gap-2 text-sm py-1"
+                                                >
+                                                  <span className="font-semibold text-slate-500 capitalize">
+                                                    {k
+                                                      .replace(/_/g, " ")
+                                                      .replace(/\b\w/g, (c) => c.toUpperCase())}
+                                                  </span>
+
+                                                  <span className="text-slate-800 leading-relaxed">
+                                                    {String(v)}
+                                                  </span>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          ))
+                                        ) : (
+                                          <p className="text-sm text-slate-600">
+                                            {String(items)}
+                                          </p>
+                                        )}
                                       </div>
                                     </div>
                                   )
