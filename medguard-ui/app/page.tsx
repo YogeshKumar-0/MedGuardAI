@@ -457,7 +457,15 @@ export default function MedGuardDashboard() {
                             <div className="space-y-3">
                               {typeof alert.recommended_action === "string" ? (
                                 <p className="text-sm text-slate-700">
-                                  {alert.recommended_action}
+                                  {Array.isArray(alert.recommended_action) ? (
+                                    <ul className="list-disc pl-5 space-y-2">
+                                      {alert.recommended_action.map((item, index) => (
+                                        <li key={index}>{item}</li>
+                                      ))}
+                                    </ul>
+                                  ) : (
+                                    <p>{alert.recommended_action}</p>
+                                  )}
                                 </p>
                               ) : (
                                 Object.entries(alert.recommended_action as Record<string, any>).map(

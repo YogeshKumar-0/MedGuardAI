@@ -38,7 +38,7 @@ class AlertType(str, Enum):
 class Alert(BaseModel):
     type: AlertType
     message: str
-    recommended_action: str
+    recommended_action: list[str] | str
 
 
 class RiskLevel(str, Enum):
